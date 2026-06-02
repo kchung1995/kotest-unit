@@ -24,5 +24,8 @@ jobs:
       - name: Ktfmt Check
         run: ./gradlew ktfmtCheck
 
+      - name: Gradle Plugin Tests
+        run: ./gradlew :kotest-unit-gradle-plugin:test :kotest-unit-gradle-plugin:validatePlugins
+
       - name: Kotest Unittests
         run: ./gradlew kotestUnittest

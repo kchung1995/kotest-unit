@@ -90,10 +90,31 @@ mavenPublishing {
 
 pluginManager.withPlugin("signing") {
     extensions.configure<SigningExtension>("signing") {
-        setRequired(
-            gradle.startParameter.taskNames.any { taskName ->
-                taskName.contains("MavenCentral", ignoreCase = true)
-            }
-        )
+        val signingKeyId =
+            providers
+                .gradleProperty("signingInMemoryKeyId")
+                .orElse(providers.gradleProperty("signing.keyId"))
+                .orNull
+        val signingPassword =
+            providers
+                .gradleProperty("signingInMemoryKeyPassword")
+                .orElse(providers.gradleProperty("signing.password"))
+                .orNull
+        val signingKey = providers.gradleProperty("signingInMemoryKey").orNull
+        val signingKeyFile =
+            providers
+                .gradleProperty("signingInMemoryKeyFile")
+                .orElse(providers.gradleProperty("signing.secretKeyRingFile"))
+                .orNull
+
+        when {
+            signingKey != null -> useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+            signingKeyFile?.endsWith(".asc") == true ->
+                useInMemoryPgpKeys(signingKeyId, file(signingKeyFile).readText(), signingPassword)
+        }
+
+        isRequired = gradle.startParameter.taskNames.any { taskName ->
+            taskName.contains("MavenCentral", ignoreCase = true)
+        }
     }
 }

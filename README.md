@@ -9,14 +9,16 @@ Exclude every other test even before instantiation.
 
 ## Installation
 
+### Maven Dependency
+
 ```kotlin
 dependencies {
     testImplementation("blog.katfun:kotest-unit:1.0.0")
 }
 ```
 
-The dependency provides the unit-test marker and Kotest spec filter. Add a Gradle task like this to run only marked
-unit tests:
+The dependency provides the unit-test marker and Kotest spec filter. It does not register Gradle tasks automatically.
+Add a Gradle task like this to run only marked unit tests:
 
 ```kotlin
 tasks.register<Test>("kotestUnittest") {
@@ -32,6 +34,23 @@ tasks.register<Test>("kotestUnittest") {
     filter { isFailOnNoMatchingTests = false }
 }
 ```
+
+### Gradle Plugin
+
+The Gradle plugin provides a shorter setup:
+
+```kotlin
+plugins {
+    id("blog.katfun.kotest-unit") version "1.0.0"
+}
+
+repositories {
+    mavenCentral()
+}
+```
+
+The plugin adds the Maven dependency and registers `kotestUnittest` automatically. `mavenCentral()` is still required
+so Gradle can resolve `blog.katfun:kotest-unit`.
 
 ## Marking Tests
 
