@@ -3,15 +3,15 @@ import org.gradle.plugins.signing.SigningExtension
 plugins {
     `java-library`
     kotlin("jvm") version "2.3.21"
+    id("com.ncorti.ktfmt.gradle") version "0.26.0"
     id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
 group = "blog.katfun"
+
 version = "1.0.0"
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 val kotestVersion = "5.9.1"
 
@@ -28,24 +28,21 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 }
 
-kotlin {
-    jvmToolchain(17)
-}
+kotlin { jvmToolchain(17) }
 
-tasks.test {
-    useJUnitPlatform()
-}
+ktfmt { kotlinLangStyle() }
+
+tasks.test { useJUnitPlatform() }
 
 tasks.register<Test>("kotestUnittest") {
     group = JavaBasePlugin.VERIFICATION_GROUP
-    description = "Runs kotest tests with @Tags(\"unit\") attached, filtered through UnitOnlySpecFilter."
+    description =
+        "Runs kotest tests with @Tags(\"unit\") attached, filtered through UnitOnlySpecFilter."
 
     testClassesDirs = sourceSets.test.get().output.classesDirs
     classpath = sourceSets.test.get().runtimeClasspath
 
-    useJUnitPlatform() {
-        includeEngines("kotest")
-    }
+    useJUnitPlatform() { includeEngines("kotest") }
 
     systemProperty("kotest.filter.unit-only", "true")
 
@@ -96,7 +93,7 @@ pluginManager.withPlugin("signing") {
         setRequired(
             gradle.startParameter.taskNames.any { taskName ->
                 taskName.contains("MavenCentral", ignoreCase = true)
-            },
+            }
         )
     }
 }

@@ -9,10 +9,11 @@ import kotlin.reflect.full.findAnnotation
 /**
  * Active only if kotest.filter.unit-only is set to true.
  *
- * Collects only tests with either `@Tags("unit")` or `@UnitTest` (meta-annotation).
- * Others are filtered out before instantiation.
+ * Collects only tests with either `@Tags("unit")` or `@UnitTest` (meta-annotation). Others are
+ * filtered out before instantiation.
  *
- * This filter is to resolve the behaviour when using filtering test with tags in kotest still includes no-tagged tests.
+ * This filter is to resolve the behaviour when using filtering test with tags in kotest still
+ * includes no-tagged tests.
  */
 object UnitOnlySpecFilter : SpecFilter {
     private const val UNIT_TAG = "unit"
@@ -32,10 +33,11 @@ object UnitOnlySpecFilter : SpecFilter {
 
     private fun collectTags(kclass: KClass<*>): Set<String> {
         val direct = kclass.findAnnotation<Tags>()?.values?.toSet().orEmpty()
-        val viaMeta = kclass.annotations
-            .mapNotNull { it.annotationClass.findAnnotation<Tags>() }
-            .flatMap { it.values.toList() }
-            .toSet()
+        val viaMeta =
+            kclass.annotations
+                .mapNotNull { it.annotationClass.findAnnotation<Tags>() }
+                .flatMap { it.values.toList() }
+                .toSet()
         return direct + viaMeta
     }
 }
