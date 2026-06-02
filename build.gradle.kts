@@ -1,10 +1,13 @@
+import org.gradle.plugins.signing.SigningExtension
+
 plugins {
     `java-library`
     kotlin("jvm") version "2.3.21"
+    id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
 group = "blog.katfun"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -47,4 +50,53 @@ tasks.register<Test>("kotestUnittest") {
     systemProperty("kotest.filter.unit-only", "true")
 
     filter { isFailOnNoMatchingTests = false }
+}
+
+mavenPublishing {
+    coordinates("blog.katfun", "kotest-unit", "1.0.0")
+
+    publishToMavenCentral()
+    signAllPublications()
+
+    pom {
+        name.set("Kotest Unit")
+        description.set("A Kotest helper for running only specs marked as unit tests.")
+        inceptionYear.set("2026")
+        url.set("https://github.com/kchung1995/kotest-unit")
+
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("kchung1995")
+                name.set("kchung1995")
+                email.set("kchung1995@users.noreply.github.com")
+                organization.set("kchung1995")
+                organizationUrl.set("https://github.com/kchung1995")
+                url.set("https://github.com/kchung1995")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/kchung1995/kotest-unit")
+            connection.set("scm:git:https://github.com/kchung1995/kotest-unit.git")
+            developerConnection.set("scm:git:ssh://git@github.com/kchung1995/kotest-unit.git")
+        }
+    }
+}
+
+pluginManager.withPlugin("signing") {
+    extensions.configure<SigningExtension>("signing") {
+        setRequired(
+            gradle.startParameter.taskNames.any { taskName ->
+                taskName.contains("MavenCentral", ignoreCase = true)
+            },
+        )
+    }
 }
