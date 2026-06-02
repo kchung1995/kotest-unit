@@ -113,8 +113,9 @@ pluginManager.withPlugin("signing") {
                 useInMemoryPgpKeys(signingKeyId, file(signingKeyFile).readText(), signingPassword)
         }
 
-        isRequired = gradle.startParameter.taskNames.any { taskName ->
-            taskName.contains("MavenCentral", ignoreCase = true)
-        }
+        isRequired =
+            gradle.startParameter.taskNames.any { taskName ->
+                taskName.contains("MavenCentral", ignoreCase = true)
+            }
     }
 }
