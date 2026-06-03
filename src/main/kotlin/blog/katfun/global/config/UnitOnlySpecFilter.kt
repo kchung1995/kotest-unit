@@ -1,8 +1,9 @@
 package blog.katfun.global.config
 
+import io.kotest.common.ExperimentalKotest
 import io.kotest.core.annotation.Tags
-import io.kotest.core.filter.SpecFilter
-import io.kotest.core.filter.SpecFilterResult
+import io.kotest.core.extensions.SpecRefExtension
+import io.kotest.core.spec.SpecRef
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 
@@ -15,20 +16,20 @@ import kotlin.reflect.full.findAnnotation
  * This filter is to resolve the behaviour when using filtering test with tags in kotest still
  * includes no-tagged tests.
  */
-object UnitOnlySpecFilter : SpecFilter {
+@OptIn(ExperimentalKotest::class)
+object UnitOnlySpecFilter : SpecRefExtension {
     private const val UNIT_TAG = "unit"
     private const val PROPERTY = "kotest.filter.unit-only"
     private const val TRUE = "true"
 
-    override fun filter(kclass: KClass<*>): SpecFilterResult {
-        if (System.getProperty(PROPERTY) != TRUE) return SpecFilterResult.Include
-
-        val tags = collectTags(kclass)
-        return if (UNIT_TAG in tags) {
-            SpecFilterResult.Include
-        } else {
-            SpecFilterResult.Exclude("Not annotated with @UnitTest / @Tags(\"$UNIT_TAG\")")
+    override suspend fun intercept(ref: SpecRef, process: suspend () -> Unit) {
+        if (System.getProperty(PROPERTY) != TRUE) {
+            process()
+            return
         }
+
+        val tags = collectTags(ref.kclass)
+        if (UNIT_TAG in tags) process()
     }
 
     private fun collectTags(kclass: KClass<*>): Set<String> {

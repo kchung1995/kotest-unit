@@ -9,14 +9,15 @@ plugins {
 
 group = "blog.katfun"
 
-version = "1.0.0"
+version = "2.0.0"
 
 repositories { mavenCentral() }
 
-val kotestVersion = "5.9.1"
+val kotestVersion = "6.1.11"
+val kotestProjectConfigFqn = "blog.katfun.global.config.KotestProjectConfig"
 
 dependencies {
-    api("io.kotest:kotest-framework-api:$kotestVersion")
+    api("io.kotest:kotest-framework-engine:$kotestVersion")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
@@ -45,12 +46,13 @@ tasks.register<Test>("kotestUnittest") {
     useJUnitPlatform() { includeEngines("kotest") }
 
     systemProperty("kotest.filter.unit-only", "true")
+    systemProperty("kotest.framework.config.fqn", kotestProjectConfigFqn)
 
     filter { isFailOnNoMatchingTests = false }
 }
 
 mavenPublishing {
-    coordinates("blog.katfun", "kotest-unit", "1.0.0")
+    coordinates("blog.katfun", "kotest-unit", version.toString())
 
     publishToMavenCentral()
     signAllPublications()

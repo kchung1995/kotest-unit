@@ -28,12 +28,16 @@ class KotestUnitPlugin : Plugin<Project> {
             task.useJUnitPlatform { options -> options.includeEngines("kotest") }
 
             task.systemProperty("kotest.filter.unit-only", "true")
+            task.systemProperty(
+                "kotest.framework.config.fqn",
+                "blog.katfun.global.config.KotestProjectConfig",
+            )
 
             task.filter { filter -> filter.isFailOnNoMatchingTests = false }
         }
     }
 
     private companion object {
-        const val KOTEST_UNIT_DEPENDENCY = "blog.katfun:kotest-unit:1.0.0"
+        const val KOTEST_UNIT_DEPENDENCY = "blog.katfun:kotest-unit:2.0.0"
     }
 }

@@ -4,5 +4,5 @@ import io.kotest.core.config.AbstractProjectConfig
 import io.kotest.core.extensions.Extension
 
 class KotestProjectConfig : AbstractProjectConfig() {
-    override fun extensions(): List<Extension> = listOf(UnitOnlySpecFilter)
+    override val extensions: List<Extension> = listOf(UnitOnlySpecFilter)
 }

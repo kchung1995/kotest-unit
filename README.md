@@ -13,7 +13,7 @@ Exclude every other test even before instantiation.
 
 ```kotlin
 dependencies {
-    testImplementation("blog.katfun:kotest-unit:1.0.0")
+    testImplementation("blog.katfun:kotest-unit:2.0.0")
 }
 ```
 
@@ -30,6 +30,7 @@ tasks.register<Test>("kotestUnittest") {
     }
 
     systemProperty("kotest.filter.unit-only", "true")
+    systemProperty("kotest.framework.config.fqn", "blog.katfun.global.config.KotestProjectConfig")
 
     filter { isFailOnNoMatchingTests = false }
 }
@@ -41,7 +42,7 @@ The Gradle plugin provides a shorter setup:
 
 ```kotlin
 plugins {
-    id("blog.katfun.kotest-unit") version "1.0.0"
+    id("blog.katfun.kotest-unit") version "2.0.0"
 }
 
 repositories {
@@ -71,3 +72,4 @@ Use `./gradlew kotestUnittest` to run the marked tests.
 | Kotest | Kotest-Unit |
 |--------|-------------|
 | 5.9.1  | 1.0.0       |
+| 6.1.11 | 2.0.0       |
