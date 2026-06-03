@@ -13,42 +13,34 @@ Exclude every other test even before instantiation.
 
 ```kotlin
 dependencies {
-    testImplementation("blog.katfun:kotest-unit:2.0.0")
+    testImplementation("blog.katfun:kotest-unit:${selectedVersion}")
 }
 ```
 
-The dependency provides the unit-test marker and Kotest spec filter. It does not register Gradle tasks automatically.
-Add a Gradle task like this to run only marked unit tests:
+See [Version Compatibility](#version-compatibility) for choosing the appropriate version based on your Kotest version.
 
-```kotlin
-tasks.register<Test>("kotestUnittest") {
-    testClassesDirs = sourceSets.test.get().output.classesDirs
-    classpath = sourceSets.test.get().runtimeClasspath
+### Gradle Task
 
-    useJUnitPlatform {
-        includeEngines("kotest")
-    }
+#### Gradle Plugin (Currently pending for Gradle team's approval)
 
-    systemProperty("kotest.filter.unit-only", "true")
-    systemProperty("kotest.framework.config.fqn", "blog.katfun.global.config.KotestProjectConfig")
-
-    filter { isFailOnNoMatchingTests = false }
-}
-```
-
-### Gradle Plugin
-
-The Gradle plugin provides a shorter setup:
+Add a Gradle plugin for easy use.
 
 ```kotlin
 plugins {
-    id("blog.katfun.kotest-unit") version "2.0.0"
+    id("blog.katfun.kotest-unit") version ${selectedVersion}
 }
 
 repositories {
     mavenCentral()
 }
 ```
+
+#### Manual
+
+The dependency provides the unit-test marker and Kotest spec filter. It does not register Gradle tasks automatically.
+Add a Gradle task that fits your version of Kotest to run only marked unit tests.
+
+Check [KotestUnitPlugin](./blog/katfun/gradle/KotestUnitPlugin).
 
 The plugin adds the Maven dependency and registers `kotestUnittest` automatically. `mavenCentral()` is still required
 so Gradle can resolve `blog.katfun:kotest-unit`.
